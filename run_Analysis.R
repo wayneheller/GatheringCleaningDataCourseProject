@@ -114,13 +114,15 @@ createTidyDataset <- function(pathtoRootDataDir = ".") {
     # specifying the fixed = TRUE parameter
     
     dfTrainTestMelt <- dfTrainTestMelt[ grepl("mean()|std()" , dfTrainTestMelt$measurementType, fixed = FALSE), ]
+    dfTrainTestMelt <- dfTrainTestMelt[ !grepl("Freq", dfTrainTestMelt$measurementType, fixed = FALSE), ]
     
     # need to drop unused factor levels in measurementType
     dfTrainTestMelt <- droplevels(dfTrainTestMelt)
     
     # call helper function to create the output file
     createCrossTableFile(dfTrainTestMelt)
-    return(dfTrainTestMelt)
+    
+    #return(dfTrainTestMelt) - include this line for debugging purposes
 }
 
 # helper function to create the cross tab table and generate the output txt file

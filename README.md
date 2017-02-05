@@ -45,6 +45,7 @@ This approach will make further summarizations by subjectId, measurementType and
 - Set your working director to the root node of the data tree stucture "UCI HAR Dataset"
 - Source the run_Analysis.R file
 - Execute the function createTidyDataset()
+
 ## Option 2
 - Your working directory is something other than "UCI HAR Dataset"
 - Source the run_Analysis.R file
