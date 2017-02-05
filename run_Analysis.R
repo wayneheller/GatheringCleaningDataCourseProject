@@ -101,19 +101,24 @@ createTidyDataset <- function(pathtoRootDataDir) {
     dfTrainTestMelt <- select(dfTrainTestMelt, subjectId, activityLabel, featureName, sensorReading)
     dfTrainTestMelt <- rename(dfTrainTestMelt, measurementType = featureName)   
     
+    # Per the instructions in this exercise, further filter the rows to just the mean() and std() calculations
+    # there is a meanFreq() measurement and it is unclear whether or not to include it.  I've left it out.
+    dfTrainTestMelt <- dfTrainTestMelt[ grepl("*mean()*" , dfTrainTestMelt$measurementType)  |
+                                             grepl("*std()*" , dfTrainTestMelt$measurementType) , ]
     
-    # diagnostics
-    # View(dfX_train)
-    # View(dfX_test)
-    # View(dfY_train)
-    # View(dfY_test)
-    # View(dfSubject_train)
-    # View(dfSubject_test)
-    # View(dfActivity_labels)
-    View(dfFeatures)
-    View(dfTrain)
-    View(dfTrainTest)
+    # Print out some information about the resulting data.frame
     View(dfTrainTestMelt)
-    print(ncol(dfX_train))
-    print(nrow(dfX_train))
+    print(nrow(dfTrainTestMelt))
+    
+    # create a cross tab of average sensorReading by subject, activity and measurement type and rename the column to
+    # averageSensorReading
+    xtTrainTestMelt <- xtabs(sensorReading ~ subjectId  + activityLabel + measurementType, 
+                data = aggregate(sensorReading ~ subjectId  + activityLabel + measurementType, dfTrainTestMelt, mean))
+       
+    View(xtTrainTestMelt)
+    class(xtTrainTestMelt)
+    
+    dfAvgMeasures <- as.data.frame(xtTrainTestMelt)
+    dfAvgMeasures <- rename(dfAvgMeasures, averageSensorReading = Freq)
+    View(dfAvgMeasures)
 }
